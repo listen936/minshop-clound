@@ -20,18 +20,37 @@ Page({
     wx.showLoading({
       title: '加载中...',
     });
-    util.request(api.CatalogList).then(function (res) {
+    // util.request(api.CatalogList).then(function (res) {
+    //     that.setData({
+    //       navList: res.data.categoryList,
+    //       currentCategory: res.data.currentCategory
+    //     });
+    //     wx.hideLoading();
+    //   });
+    // util.request(api.GoodsCount).then(function (res) {
+    //   that.setData({
+    //     goodsCount: res.data.goodsCount
+    //   });
+    // });
+    wx.cloud.callFunction({
+      // 云函数名称
+      name: 'category',
+      // 传给云函数的参数
+      data: {
+
+      },
+    })
+      .then(res => {
+        console.log('+++++++++++') // 3
+
+        console.log(res) // 3
         that.setData({
-          navList: res.data.categoryList,
-          currentCategory: res.data.currentCategory
+          navList: res.result.categoryList,
+          currentCategory: res.result.currentCategory
         });
         wx.hideLoading();
-      });
-    util.request(api.GoodsCount).then(function (res) {
-      that.setData({
-        goodsCount: res.data.goodsCount
-      });
-    });
+      })
+      .catch(console.error)
 
   },
   getCurrentCategory: function (id) {

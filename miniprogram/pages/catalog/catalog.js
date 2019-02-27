@@ -45,8 +45,8 @@ Page({
 
         console.log(res) // 3
         that.setData({
-          navList: res.result.categoryList,
-          currentCategory: res.result.currentCategory
+          navList: res.result.currentCategory,
+          currentCategory: res.result.currentCategory[0],
         });
         wx.hideLoading();
       })
@@ -54,13 +54,18 @@ Page({
 
   },
   getCurrentCategory: function (id) {
+    console.log(id)
     let that = this;
-    util.request(api.CatalogCurrent, { id: id })
-      .then(function (res) {
+    this.data.navList.map((val) => {
+      console.log(val.id)
+      
+      if(val.id == id){
         that.setData({
-          currentCategory: res.data.currentCategory
+          currentCategory: val
         });
-      });
+      }
+    })
+
   },
   onReady: function () {
     // 页面渲染完成
@@ -74,15 +79,15 @@ Page({
   onUnload: function () {
     // 页面关闭
   },
-  getList: function () {
-    var that = this;
-    util.request(api.ApiRootUrl + 'api/catalog/' + that.data.currentCategory.cat_id)
-      .then(function (res) {
-        that.setData({
-          categoryList: res.data,
-        });
-      });
-  },
+  // getList: function () {
+  //   var that = this;
+  //   util.request(api.ApiRootUrl + 'api/catalog/' + that.data.currentCategory.cat_id)
+  //     .then(function (res) {
+  //       that.setData({
+  //         categoryList: res.data,
+  //       });
+  //     });
+  // },
   switchCate: function (event) {
     var that = this;
     var currentTarget = event.currentTarget;

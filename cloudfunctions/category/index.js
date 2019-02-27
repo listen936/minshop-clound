@@ -6,14 +6,19 @@ const db = cloud.database()
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-  let currentCategory
+  let currentCategory = [];
   await db.collection('minshop_category').where({parent_id:'0'}).orderBy('show_index','asc').get().then(res => {
     currentCategory = res.data
   })
-  let task = [];
+  // let task = [];
+  // categoryList.map((val) => {
+  //   currentCategory.push(val)
+  // })
   for (let i = 0; i < currentCategory.length;i++){
-    let promise = await db.collection('minshop_category').where({ parent_id: currentCategory[i].id }).orderBy('show_index', 'asc').get()
-    currentCategory[i].subCategoryList = promise
+    await db.collection('minshop_category').where({ parent_id: currentCategory[i].id }).orderBy('sort_order', 'asc').get().then(res => {
+      currentCategory[i].subCategoryList = res.data
+    })
+    
   }
   // // 等待所有
   // return (await Promise.all(currentCategory)).reduce((acc, cur) => {
@@ -23,7 +28,6 @@ exports.main = async (event, context) => {
   //   }
   // })
   return {
-    categoryList: currentCategory[0],
     currentCategory
   }
 

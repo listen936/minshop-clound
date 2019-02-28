@@ -77,11 +77,24 @@ Page({
     }).then(res => {
       console.log(res)
       that.setData({
-        navList:res.result.brotherCategory,
-        currentCategory:res.result.currentCategory[0],
-        goodsList:res.result.goodsList
-        
+        navList: res.result.brotherCategory,
+        currentCategory: res.result.currentCategory[0],
+        goodsList: res.result.goodsList
       })
+      //nav位置
+      let currentIndex = 0;
+      let navListCount = that.data.navList.length;
+      for (let i = 0; i < navListCount; i++) {
+        currentIndex += 1;
+        if (that.data.navList[i].id == that.data.id) {
+          break;
+        }
+      }
+      if (currentIndex > navListCount / 2 && navListCount > 5) {
+        that.setData({
+          scrollLeft: currentIndex * 60
+        });
+      }
     }).catch(console.error)
   },
   onReady: function() {
